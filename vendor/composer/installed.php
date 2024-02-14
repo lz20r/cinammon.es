@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'pterodactyl/panel',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => NULL,
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '52c4b624e8180a54272ff3e9348e9cc11ef06da1',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -816,9 +816,9 @@
             'dev_requirement' => false,
         ),
         'pterodactyl/panel' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => NULL,
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '52c4b624e8180a54272ff3e9348e9cc11ef06da1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
