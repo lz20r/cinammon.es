@@ -28,11 +28,11 @@ const PageContentBlock: React.FC<PageContentBlockProps> = ({ title, showFlashKey
                     <p css={tw`text-center text-neutral-500 text-xs`}>
                         <a
                             rel={'noopener nofollow noreferrer'}
-                            href={'https://nookure.com'}
+                            href={'https://cinammon.es'}
                             target={'_blank'}
                             css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
                         >
-                            Nookure&reg;
+                            Cinammon
                         </a>
                         &nbsp;&copy; 2022 - {new Date().getFullYear()}
                     </p>
