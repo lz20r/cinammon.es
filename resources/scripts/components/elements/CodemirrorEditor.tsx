@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import modes from '@/modes';
 
 export interface Props {
@@ -40,23 +41,33 @@ const findModeByFilename = (filename: string) => {
     return undefined;
 };
 
+// monaco.languages.register({ id: 'properties' });
+
+// monaco.languages.setMonarchTokensProvider('properties', {
+//     tokenizer: {
+//         root: [
+//             [/\b(?:true|false)\b/, 'keyword'],
+//             [/[a-zA-Z_-][\w-]*/, 'variable'],
+//             [/=/, 'operator'],
+//             [/#.*$/, 'comment'],
+//         ],
+//     },
+// });
+
 export default ({ initialContent, filename, mode, fetchContent, onContentSaved, onModeChanged }: Props) => {
     const [editorInitialContent, setEditorInitialContent] = useState<string>('');
     const [editorMode, setEditorMode] = useState<string>('text/plain');
     const editorRef = useRef<any>(null);
-    const monacoRef = useRef<any>(null);
 
-    function onMount(editor: any, monaco: any) {
-        editorRef.current = editor;
-        monacoRef.current = monaco;
-    }
+    const onMount = (editor: any) => (editorRef.current = editor);
 
     useEffect(() => {
         if (filename === undefined) {
             return;
         }
-
-        setEditorMode(findModeByFilename(filename)?.mime || 'text/plain');
+        const modeData = findModeByFilename(filename)?.mime || 'text/plain';
+        setEditorMode(modeData);
+        onModeChanged(modeData);
     }, [filename]);
 
     useEffect(() => {
@@ -68,27 +79,19 @@ export default ({ initialContent, filename, mode, fetchContent, onContentSaved, 
     }, [initialContent]);
 
     useEffect(() => {
-        if (editorRef.current) {
-            const editorInstance = editorRef.current;
-            const monacoInstance = monacoRef.current;
-
-            editorInstance.addCommand(monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.KEY_S, () => {
-                onContentSaved();
-            });
-
-            fetchContent(() => Promise.resolve(editorInstance.getModel().getValue()));
-        } else {
+        if (!editorRef.current) {
             fetchContent(() => Promise.reject(new Error('no editor session has been configured')));
-        }
-    }, [editorRef, monacoRef, fetchContent, onContentSaved]);
-
-    useEffect(() => {
-        if (filename === undefined) {
             return;
         }
+        const editorInstance = editorRef.current;
 
-        onModeChanged(findModeByFilename(filename)?.mime || 'text/plain');
-    }, [filename]);
+        editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+            onContentSaved();
+        });
+
+        fetchContent(() => Promise.resolve(editorInstance.getModel().getValue()));
+    }, [editorRef, fetchContent, onContentSaved]);
+
     return (
         <Editor
             height='72vh'

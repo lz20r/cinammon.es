@@ -24,7 +24,7 @@ const modes: Mode[] = [
     { name: 'Dockerfile', mime: 'text/x-dockerfile', mode: 'dockerfile', file: /^Dockerfile$/ },
     { name: 'Git Markdown', mime: 'text/x-gfm', mode: 'gfm', file: /^(readme|contributing|history|license).md$/i },
     { name: 'Golang', mime: 'text/x-go', mode: 'go', ext: ['go'] },
-    { name: 'HTML', mime: 'text/html', mode: 'htmlmixed', ext: ['html', 'htm', 'handlebars', 'hbs'], alias: ['xhtml'] },
+    { name: 'HTML', mime: 'text/html', mode: 'html', ext: ['html', 'htm', 'handlebars', 'hbs'], alias: ['xhtml'] },
     { name: 'HTTP', mime: 'message/http', mode: 'http' },
     {
         name: 'JavaScript',
@@ -44,7 +44,7 @@ const modes: Mode[] = [
         name: 'JSON',
         mime: 'application/json',
         mimes: ['application/json', 'application/x-json'],
-        mode: 'javascript',
+        mode: 'json',
         ext: ['json', 'map'],
         alias: ['json5'],
     },
@@ -94,7 +94,7 @@ const modes: Mode[] = [
     { name: 'SQL', mime: 'text/x-sql', mode: 'sql', ext: ['sql'] },
     { name: 'SQLite', mime: 'text/x-sqlite', mode: 'sql' },
     { name: 'TOML', mime: 'text/x-toml', mode: 'toml', ext: ['toml'] },
-    { name: 'TypeScript', mime: 'application/typescript', mode: 'javascript', ext: ['ts'], alias: ['ts'] },
+    { name: 'TypeScript', mime: 'application/typescript', mode: 'typescript', ext: ['ts'], alias: ['ts'] },
     { name: 'Vue', mime: 'script/x-vue', mimes: ['script/x-vue', 'text/x-vue'], mode: 'vue', ext: ['vue'] },
     {
         name: 'XML',
