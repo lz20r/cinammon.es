@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import modes from '@/modes';
-
+import modes from '@/modes'; 
 export interface Props {
     style?: React.CSSProperties;
     initialContent?: string;
