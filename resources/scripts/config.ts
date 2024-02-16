@@ -1,3 +1,3 @@
 export default {
-    TERMINAL_PRELUDE: 'container@cinnamon~ ',
+    TERMINAL_PRELUDE: 'container@cinammon~ ',
 };
