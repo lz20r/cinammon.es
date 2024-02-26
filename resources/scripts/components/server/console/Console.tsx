@@ -15,7 +15,9 @@ import { usePersistedState } from '@/plugins/usePersistedState';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
 import classNames from 'classnames';
 import { ChevronDoubleRightIcon } from '@heroicons/react/solid';
-import NookConfig from '@/config';
+import PowerButtons from '@/components/server/console/PowerButtons';
+import Can from '@/components/elements/Can';
+import { Type_a_command } from '@/lang';
 
 import 'xterm/css/xterm.css';
 import styles from './style.module.css';
@@ -53,7 +55,7 @@ const terminalProps: ITerminalOptions = {
 };
 
 export default () => {
-    const TERMINAL_PRELUDE = `\u001b[1m\u001b[33m${NookConfig.TERMINAL_PRELUDE} \u001b[0m`;
+    const TERMINAL_PRELUDE = '\u001b[1m\u001b[33mcontainer@pterodactyl~ \u001b[0m';
     const ref = useRef<HTMLDivElement>(null);
     const terminal = useMemo(() => new Terminal({ ...terminalProps }), []);
     const fitAddon = new FitAddon();
@@ -67,7 +69,6 @@ export default () => {
     const isTransferring = ServerContext.useStoreState((state) => state.server.data!.isTransferring);
     const [history, setHistory] = usePersistedState<string[]>(`${serverId}:command_history`, []);
     const [historyIndex, setHistoryIndex] = useState(-1);
-    // SearchBarAddon has hardcoded z-index: 999 :(
     const zIndex = `
     .xterm-search-bar__addon {
         z-index: 10;
@@ -202,28 +203,33 @@ export default () => {
                     <div id={styles.terminal} ref={ref} />
                 </div>
             </div>
-            {canSendCommands && (
-                <div className={classNames('relative', styles.overflows_container)}>
-                    <input
-                        className={classNames('peer', styles.command_input)}
-                        type={'text'}
-                        placeholder={'Type a command...'}
-                        aria-label={'Console command input.'}
-                        disabled={!instance || !connected}
-                        onKeyDown={handleCommandKeyDown}
-                        autoCorrect={'off'}
-                        autoCapitalize={'none'}
-                    />
-                    <div
-                        className={classNames(
-                            'text-gray-100 peer-focus:text-gray-50 peer-focus:animate-pulse',
-                            styles.command_icon
-                        )}
-                    >
-                        <ChevronDoubleRightIcon className={'w-4 h-4'} />
+            <div className={classNames(styles.command_input)}>
+                {canSendCommands && (
+                    <div className={classNames('relative w-full', styles.overflows_container)}>
+                        <input
+                            className={classNames('peer')}
+                            type={'text'}
+                            placeholder={Type_a_command}
+                            aria-label={'Console command input.'}
+                            disabled={!instance || !connected}
+                            onKeyDown={handleCommandKeyDown}
+                            autoCorrect={'off'}
+                            autoCapitalize={'none'}
+                        />
+                        <div
+                            className={classNames(
+                                'text-gray-100 peer-focus:text-gray-50 peer-focus:animate-pulse',
+                                styles.command_icon
+                            )}
+                        >
+                            <ChevronDoubleRightIcon className={'w-4 h-4'} />
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+                <Can action={['control.start', 'control.stop', 'control.restart']} matchAny>
+                    <PowerButtons className={'flex sm:justify-end space-x-2 my-2'} />
+                </Can>
+            </div>
         </div>
     );
 };

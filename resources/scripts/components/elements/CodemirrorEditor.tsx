@@ -1,7 +1,110 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Editor } from '@monaco-editor/react';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import modes from '@/modes'; 
+import React, { useCallback, useEffect, useState } from 'react';
+import CodeMirror from 'codemirror';
+import styled from 'styled-components/macro';
+import tw from 'twin.macro';
+import modes from '@/modes';
+
+require('codemirror/lib/codemirror.css');
+require('codemirror/theme/ayu-mirage.css');
+require('codemirror/addon/edit/closebrackets');
+require('codemirror/addon/edit/closetag');
+require('codemirror/addon/edit/matchbrackets');
+require('codemirror/addon/edit/matchtags');
+require('codemirror/addon/edit/trailingspace');
+require('codemirror/addon/fold/foldcode');
+require('codemirror/addon/fold/foldgutter.css');
+require('codemirror/addon/fold/foldgutter');
+require('codemirror/addon/fold/brace-fold');
+require('codemirror/addon/fold/comment-fold');
+require('codemirror/addon/fold/indent-fold');
+require('codemirror/addon/fold/markdown-fold');
+require('codemirror/addon/fold/xml-fold');
+require('codemirror/addon/hint/css-hint');
+require('codemirror/addon/hint/html-hint');
+require('codemirror/addon/hint/javascript-hint');
+require('codemirror/addon/hint/show-hint.css');
+require('codemirror/addon/hint/show-hint');
+require('codemirror/addon/hint/sql-hint');
+require('codemirror/addon/hint/xml-hint');
+require('codemirror/addon/mode/simple');
+require('codemirror/addon/dialog/dialog.css');
+require('codemirror/addon/dialog/dialog');
+require('codemirror/addon/scroll/annotatescrollbar');
+require('codemirror/addon/scroll/scrollpastend');
+require('codemirror/addon/scroll/simplescrollbars.css');
+require('codemirror/addon/scroll/simplescrollbars');
+require('codemirror/addon/search/jump-to-line');
+require('codemirror/addon/search/match-highlighter');
+require('codemirror/addon/search/matchesonscrollbar.css');
+require('codemirror/addon/search/matchesonscrollbar');
+require('codemirror/addon/search/search');
+require('codemirror/addon/search/searchcursor');
+
+require('codemirror/mode/brainfuck/brainfuck');
+require('codemirror/mode/clike/clike');
+require('codemirror/mode/css/css');
+require('codemirror/mode/dart/dart');
+require('codemirror/mode/diff/diff');
+require('codemirror/mode/dockerfile/dockerfile');
+require('codemirror/mode/erlang/erlang');
+require('codemirror/mode/gfm/gfm');
+require('codemirror/mode/go/go');
+require('codemirror/mode/handlebars/handlebars');
+require('codemirror/mode/htmlembedded/htmlembedded');
+require('codemirror/mode/htmlmixed/htmlmixed');
+require('codemirror/mode/http/http');
+require('codemirror/mode/javascript/javascript');
+require('codemirror/mode/jsx/jsx');
+require('codemirror/mode/julia/julia');
+require('codemirror/mode/lua/lua');
+require('codemirror/mode/markdown/markdown');
+require('codemirror/mode/nginx/nginx');
+require('codemirror/mode/perl/perl');
+require('codemirror/mode/php/php');
+require('codemirror/mode/properties/properties');
+require('codemirror/mode/protobuf/protobuf');
+require('codemirror/mode/pug/pug');
+require('codemirror/mode/python/python');
+require('codemirror/mode/rpm/rpm');
+require('codemirror/mode/ruby/ruby');
+require('codemirror/mode/rust/rust');
+require('codemirror/mode/sass/sass');
+require('codemirror/mode/shell/shell');
+require('codemirror/mode/smarty/smarty');
+require('codemirror/mode/sql/sql');
+require('codemirror/mode/swift/swift');
+require('codemirror/mode/toml/toml');
+require('codemirror/mode/twig/twig');
+require('codemirror/mode/vue/vue');
+require('codemirror/mode/xml/xml');
+require('codemirror/mode/yaml/yaml');
+
+const EditorContainer = styled.div`
+    min-height: 16rem;
+    height: calc(100vh - 20rem);
+    ${tw`relative`};
+
+    > div {
+        ${tw`rounded h-full`};
+    }
+
+    .CodeMirror {
+        font-size: 12px;
+        line-height: 1.375rem;
+    }
+
+    .CodeMirror-linenumber {
+        padding: 1px 12px 0 12px !important;
+    }
+
+    .CodeMirror-foldmarker {
+        color: #cbccc6;
+        text-shadow: none;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+`;
+
 export interface Props {
     style?: React.CSSProperties;
     initialContent?: string;
@@ -40,66 +143,74 @@ const findModeByFilename = (filename: string) => {
     return undefined;
 };
 
-// monaco.languages.register({ id: 'properties' });
+export default ({ style, initialContent, filename, mode, fetchContent, onContentSaved, onModeChanged }: Props) => {
+    const [editor, setEditor] = useState<CodeMirror.Editor>();
 
-// monaco.languages.setMonarchTokensProvider('properties', {
-//     tokenizer: {
-//         root: [
-//             [/\b(?:true|false)\b/, 'keyword'],
-//             [/[a-zA-Z_-][\w-]*/, 'variable'],
-//             [/=/, 'operator'],
-//             [/#.*$/, 'comment'],
-//         ],
-//     },
-// });
+    const ref = useCallback((node) => {
+        if (!node) return;
 
-export default ({ initialContent, filename, mode, fetchContent, onContentSaved, onModeChanged }: Props) => {
-    const [editorInitialContent, setEditorInitialContent] = useState<string>('');
-    const [editorMode, setEditorMode] = useState<string>('text/plain');
-    const editorRef = useRef<any>(null);
+        const e = CodeMirror.fromTextArea(node, {
+            mode: 'text/plain',
+            theme: 'ayu-mirage',
+            indentUnit: 4,
+            smartIndent: true,
+            tabSize: 4,
+            indentWithTabs: false,
+            lineWrapping: true,
+            lineNumbers: true,
+            foldGutter: true,
+            fixedGutter: true,
+            scrollbarStyle: 'overlay',
+            coverGutterNextToScrollbar: false,
+            readOnly: false,
+            showCursorWhenSelecting: false,
+            autofocus: false,
+            spellcheck: true,
+            autocorrect: false,
+            autocapitalize: false,
+            lint: false,
+            // @ts-expect-error this property is actually used, the d.ts file for CodeMirror is incorrect.
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+        });
 
-    const onMount = (editor: any) => (editorRef.current = editor);
+        setEditor(e);
+    }, []);
 
     useEffect(() => {
         if (filename === undefined) {
             return;
         }
-        const modeData = findModeByFilename(filename)?.mime || 'text/plain';
-        setEditorMode(modeData);
-        onModeChanged(modeData);
+
+        onModeChanged(findModeByFilename(filename)?.mime || 'text/plain');
     }, [filename]);
 
     useEffect(() => {
-        setEditorMode(mode);
-    }, [mode]);
+        editor && editor.setOption('mode', mode);
+    }, [editor, mode]);
 
     useEffect(() => {
-        setEditorInitialContent(initialContent || '');
-    }, [initialContent]);
+        editor && editor.setValue(initialContent || '');
+    }, [editor, initialContent]);
 
     useEffect(() => {
-        if (!editorRef.current) {
+        if (!editor) {
             fetchContent(() => Promise.reject(new Error('no editor session has been configured')));
             return;
         }
-        const editorInstance = editorRef.current;
 
-        editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-            onContentSaved();
+        editor.addKeyMap({
+            'Ctrl-S': () => onContentSaved(),
+            'Cmd-S': () => onContentSaved(),
         });
 
-        fetchContent(() => Promise.resolve(editorInstance.getModel().getValue()));
-    }, [editorRef, fetchContent, onContentSaved]);
+        fetchContent(() => Promise.resolve(editor.getValue()));
+    }, [editor, fetchContent, onContentSaved]);
 
     return (
-        <Editor
-            height='72vh'
-            width='100%'
-            theme='vs-dark'
-            language={editorMode}
-            value={editorInitialContent}
-            options={{ minimap: { enabled: false } }}
-            onMount={onMount}
-        />
+        <EditorContainer style={style}>
+            <textarea ref={ref} />
+        </EditorContainer>
     );
 };

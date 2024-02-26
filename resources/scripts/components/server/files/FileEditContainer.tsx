@@ -20,6 +20,21 @@ import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import { encodePathSegments, hashToPath } from '@/helpers';
 import { dirname } from 'path';
 import CodemirrorEditor from '@/components/elements/CodemirrorEditor';
+import styled from 'styled-components/macro';
+import { Save_content, Create_file } from '@/lang';
+
+const FileManager = styled.div`
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    width:100%;
+    flex-wrap:wrapper;
+    background-color:var(--secondary);
+    border-radius:10px;
+    padding:1rem 2rem;
+    margin-bottom:1rem;
+`;
 
 export default () => {
     const [error, setError] = useState('');
@@ -86,11 +101,38 @@ export default () => {
     return (
         <PageContentBlock>
             <FlashMessageRender byKey={'files:view'} css={tw`mb-4`} />
-            <ErrorBoundary>
-                <div css={tw`mb-4`}>
-                    <FileManagerBreadcrumbs withinFileEditor isNewFile={action !== 'edit'} />
+            <FileManager css={tw`flex justify-between mb-4`}>
+                <ErrorBoundary>
+                    <div>
+                        <FileManagerBreadcrumbs withinFileEditor isNewFile={action !== 'edit'} />
+                    </div>
+                </ErrorBoundary>
+                
+                <div css={tw`flex justify-end`}>
+                    <div css={tw`flex-1 sm:flex-none rounded mr-4`}>
+                        <Select value={mode} onChange={(e) => setMode(e.currentTarget.value)}>
+                            {modes.map((mode) => (
+                                <option key={`${mode.name}_${mode.mime}`} value={mode.mime}>
+                                    {mode.name}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
+                    {action === 'edit' ? (
+                        <Can action={'file.update'}>
+                            <Button css={tw`flex-1 sm:flex-none`} onClick={() => save()}>
+                                {Save_content}
+                            </Button>
+                        </Can>
+                    ) : (
+                        <Can action={'file.create'}>
+                            <Button css={tw`flex-1 sm:flex-none`} onClick={() => setModalVisible(true)}>
+                                {Create_file}
+                            </Button>
+                        </Can>
+                    )}
                 </div>
-            </ErrorBoundary>
+            </FileManager>
             {hash.replace(/^#/, '').endsWith('.pteroignore') && (
                 <div css={tw`mb-4 p-4 border-l-4 bg-neutral-900 rounded border-cyan-400`}>
                     <p css={tw`text-neutral-300 text-sm`}>
@@ -128,30 +170,6 @@ export default () => {
                         }
                     }}
                 />
-            </div>
-            <div css={tw`flex justify-end mt-4`}>
-                <div css={tw`flex-1 sm:flex-none rounded bg-neutral-900 mr-4`}>
-                    <Select value={mode} onChange={(e) => setMode(e.currentTarget.value)}>
-                        {modes.map((mode) => (
-                            <option key={`${mode.name}_${mode.mime}`} value={mode.mime}>
-                                {mode.name}
-                            </option>
-                        ))}
-                    </Select>
-                </div>
-                {action === 'edit' ? (
-                    <Can action={'file.update'}>
-                        <Button css={tw`flex-1 sm:flex-none`} onClick={() => save()}>
-                            Save Content
-                        </Button>
-                    </Can>
-                ) : (
-                    <Can action={'file.create'}>
-                        <Button css={tw`flex-1 sm:flex-none`} onClick={() => setModalVisible(true)}>
-                            Create File
-                        </Button>
-                    </Can>
-                )}
             </div>
         </PageContentBlock>
     );

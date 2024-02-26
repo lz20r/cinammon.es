@@ -15,13 +15,14 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import { Dialog, DialogWrapperContext } from '@/components/elements/dialog';
 import Code from '@/components/elements/Code';
 import asDialog from '@/hoc/asDialog';
+import { Create_directory, Created_as, Valied_directory } from '@/lang';
 
 interface Values {
     directoryName: string;
 }
 
 const schema = object().shape({
-    directoryName: string().required('A valid directory name must be provided.'),
+    directoryName: string().required(`${Valied_directory}`),
 });
 
 const generateDirectoryData = (name: string): FileObject => ({
@@ -40,7 +41,7 @@ const generateDirectoryData = (name: string): FileObject => ({
 });
 
 const NewDirectoryDialog = asDialog({
-    title: 'Create Directory',
+    title: `${Create_directory}`,
 })(() => {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const directory = ServerContext.useStoreState((state) => state.files.directory);
@@ -73,7 +74,7 @@ const NewDirectoryDialog = asDialog({
                     <Form css={tw`m-0`}>
                         <Field autoFocus id={'directoryName'} name={'directoryName'} label={'Name'} />
                         <p css={tw`mt-2 text-sm md:text-base break-all`}>
-                            <span css={tw`text-neutral-200`}>This directory will be created as&nbsp;</span>
+                            <span css={tw`text-neutral-200`}>{Created_as}&nbsp;</span>
                             <Code>
                                 /home/container/
                                 <span css={tw`text-cyan-200`}>
