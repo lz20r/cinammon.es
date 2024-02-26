@@ -1,16 +1,29 @@
 const colors = require('tailwindcss/colors');
 
 const gray = {
-    50: colors.neutral[50],
-    100: colors.neutral[100],
-    200: colors.neutral[200],
-    300: colors.neutral[300],
-    400: colors.neutral[400],
-    500: colors.neutral[500],
-    600: colors.neutral[600],
-    700: colors.neutral[700],
-    800: colors.neutral[800],
-    900: colors.neutral[900],
+    50: 'var(--highlight-color)', // white text
+    100: 'var(--light-color)',
+    200: 'var(--color)', // normal text
+    300: 'var(--sub-color)',
+    400: 'var(--color-4)',
+    500: 'var(--color-5)',
+    600: 'var(--color-6)',
+    700: 'var(--secondary)',
+    800: 'var(--dark)',
+    900: 'var(--dark)',
+};
+
+const neutral = {
+    50: 'var(--highlight-color)', // white text
+    100: 'var(--light-color)',
+    200: 'var(--color)', // normal text
+    300: 'var(--sub-color)',
+    400: 'var(--color-4)',
+    500: 'var(--color-5)',
+    600: 'var(--color-6)',
+    700: 'var(--secondary)',
+    800: 'var(--dark)',
+    900: 'var(--dark)',
 };
 
 module.exports = {
@@ -27,22 +40,9 @@ module.exports = {
                 // "primary" and "neutral" are deprecated, prefer the use of "blue" and "gray"
                 // in new code.
                 primary: colors.blue,
-                orange: colors.orange,
                 gray: gray,
-                neutral: gray,
+                neutral: neutral,
                 cyan: colors.cyan,
-                neutral: {
-                    50: colors.neutral[50],
-                    100: colors.neutral[100],
-                    200: colors.neutral[200],
-                    300: colors.neutral[300],
-                    400: colors.neutral[400],
-                    500: colors.neutral[500],
-                    600: colors.neutral[600],
-                    700: '#17171B',
-                    800: '#212121',
-                    900: '#121212',
-                }
             },
             fontSize: {
                 '2xs': '0.625rem',
