@@ -4,9 +4,11 @@ namespace Pterodactyl\Http\Controllers\Api\Client;
 
 use Pterodactyl\Models\Server;
 use Pterodactyl\Models\Permission;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Pterodactyl\Models\Filters\MultiFieldServerFilter;
+use Pterodactyl\Repositories\Eloquent\ServerRepository;
 use Pterodactyl\Transformers\Api\Client\ServerTransformer;
 use Pterodactyl\Http\Requests\Api\Client\GetServersRequest;
 
@@ -67,7 +69,9 @@ class ClientController extends ClientApiController
     }
 
     /**
-     * Returns all the subuser permissions available on the system.
+     * Returns all of the subuser permissions available on the system.
+     *
+     * @return array
      */
     public function permissions(): array
     {
@@ -76,6 +80,16 @@ class ClientController extends ClientApiController
             'attributes' => [
                 'permissions' => Permission::permissions(),
             ],
+        ];
+    }
+
+    public function theme()
+    {
+        $data = DB::table('theme')->first();
+
+        return [
+            'success' => true,
+            'data' => $data,
         ];
     }
 }
