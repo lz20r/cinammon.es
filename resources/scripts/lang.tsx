@@ -1,6 +1,6 @@
 export const ForgotPassword = "Forgot password?"
 export const ReturnToLogin = "Return to Login"
-export const LogintoContinue = "Login to Continue"
+export const LogintoContinue = "Cinammon Hosting"
 export const UsernameorEmail = "Username or Email"
 export const Email = "Email"
 export const Continue = "Continue"

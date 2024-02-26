@@ -3,7 +3,9 @@ import { createGlobalStyle } from 'styled-components/macro';
 
 export default createGlobalStyle`
     body {
-        ${tw`font-sans bg-neutral-800 text-neutral-200`};
+        ${tw`font-sans`};
+        color:var(--color);
+        background-color:var(--background-color) !important;
         letter-spacing: 0.015em;
     }
 
@@ -12,7 +14,8 @@ export default createGlobalStyle`
     }
 
     p {
-        ${tw`text-neutral-200 leading-snug font-sans`};
+        ${tw`leading-snug font-sans`};
+        color:var(--color);
     }
 
     form {
@@ -45,7 +48,7 @@ export default createGlobalStyle`
         border-right-width: 4px;
         border-left-width: 4px;
         -webkit-border-radius: 9px 4px;
-        -webkit-box-shadow: inset 0 0 0 1px #444, inset 0 0 0 4px #444;
+        -webkit-box-shadow: inset 0 0 0 1px hsl(211, 10%, 53%), inset 0 0 0 4px hsl(209deg 18% 30%);
     }
 
     ::-webkit-scrollbar-track-piece {
@@ -58,6 +61,12 @@ export default createGlobalStyle`
         border-top-width: 4px;
         border-bottom-width: 4px;
         -webkit-border-radius: 4px 9px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        -webkit-box-shadow:
+        inset 0 0 0 1px var(--primary),
+        inset 0 0 0 4px var(--primary);
     }
 
     ::-webkit-scrollbar-corner {
