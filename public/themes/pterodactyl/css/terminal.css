@@ -72,6 +72,7 @@
 
 .ansi-black-fg { color: rgb(0, 0, 0); }
 .ansi-red-fg { color: rgb(166, 0, 44); }
+.ansi-indian-red-fg { color: rgb(90, 21, 26); }
 .ansi-green-fg { color: rgb(55, 106, 27); }
 .ansi-yellow-fg { color: rgb(241, 133, 24); }
 .ansi-blue-fg { color: rgb(17, 56, 163); }

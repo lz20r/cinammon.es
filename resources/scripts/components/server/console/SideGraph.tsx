@@ -66,8 +66,8 @@ const DISKGraph = styled.div`
     width:100%;
     height:70px;
     bottom:0;
-    border-top:2px solid #3B6CDE;
-    background-color:rgb(59, 108, 222, .5);
+    border-top:2px solid #5A151A;
+    background-color:rgb(157, 74, 72, .5); 
 `;
 
 type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime' | 'rx' | 'tx', number>;
