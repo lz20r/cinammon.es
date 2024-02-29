@@ -20,7 +20,7 @@ export default () => {
                 <div className='icon'>
                     <Icon.BookOpen size={20}/>
                 </div>
-                <span>Knowledgebase</span>
+                <span>phpmyadmin.cinammon.es</span>
             </a>
         }
         </>
