@@ -20,7 +20,7 @@ export default () => {
                 <div className='icon'>
                     <Icon.Wifi size={20}/>
                 </div>
-                <span>Status</span>
+                <span>status.cinammon.es</span>
             </a>
         }
         </>
