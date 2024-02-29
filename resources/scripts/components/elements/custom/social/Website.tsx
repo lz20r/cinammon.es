@@ -20,7 +20,7 @@ export default () => {
                 <div className='icon'>
                     <Icon.Link size={20}/>
                 </div>
-                <span>Website</span>
+                <span>cinammon.es</span>
             </a>
         }
         </>
